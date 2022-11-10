@@ -7,19 +7,19 @@ namespace CSharpCodeVisualizer.Syntax
 {
     public class NamespaceNode : ProjectNode
     {
-        private readonly NamespaceDeclarationSyntax _namespaceDeclaration;
+        private readonly string _namespace;
 
         public override string Key
         {
             get
             {
-                return this._namespaceDeclaration.Name.ToString();
+                return this._namespace;
             }
         }
 
-        public NamespaceNode(NamespaceDeclarationSyntax namespaceDeclaration) : base()
+        public NamespaceNode(string namespaceName) : base()
         {
-            this._namespaceDeclaration = namespaceDeclaration;
+            this._namespace = namespaceName;
         }
     }
 }

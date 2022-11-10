@@ -18,6 +18,14 @@ namespace CSharpCodeVisualizer.Syntax
             }
         }
 
+        public int Height
+        {
+            get
+            {
+                return CalculateHeight(this);
+            }
+        }
+
         public GameObject GameObject
         {
             get
@@ -41,6 +49,17 @@ namespace CSharpCodeVisualizer.Syntax
         public ProjectNode()
         {
             this._children = new List<ProjectNode>();
+        }
+
+        public int CalculateHeight(ProjectNode node)
+        {
+            if(node.Children.Count == 0)
+            {
+                return 1;
+            }
+            int maxHeight = 0;
+            node.Children.ForEach(node => maxHeight = Mathf.Max(maxHeight, CalculateHeight(node)));
+            return 1 + maxHeight;
         }
     }
 }

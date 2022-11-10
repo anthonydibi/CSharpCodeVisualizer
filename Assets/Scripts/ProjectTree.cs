@@ -101,7 +101,7 @@ namespace CSharpCodeVisualizer.Syntax
                 bool namespaceWasFoundInMap = _keyToProjectNodeMap.TryGetValue(curNamespace, out namespaceNode);
                 if (!namespaceWasFoundInMap)
                 {
-                    namespaceNode = new NamespaceNode(namespaceDeclaration);
+                    namespaceNode = new NamespaceNode(curNamespace);
                     curNode.Children.Add(namespaceNode);
                     _keyToProjectNodeMap.Add(curNamespace, namespaceNode);
                 }
@@ -112,11 +112,13 @@ namespace CSharpCodeVisualizer.Syntax
         private void InsertClassNode(ClassNode classNode)
         {
             NamespaceDeclarationSyntax classNamespace =
-                classNode.ClassDef.Ancestors().OfType<NamespaceDeclarationSyntax>().First();
+                classNode.ClassDef.Ancestors().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
             if (classNamespace == null)  //if the class doesn't have a namespace, place it in the root namespace
             {
-                _root.Children.Add(classNode);
-                _keyToProjectNodeMap.Add(classNode.Key, classNode);
+                if(_keyToProjectNodeMap.TryAdd(classNode.Key, classNode))
+                {
+                    _root.Children.Add(classNode);
+                }
                 return;
             }
             if (!this._keyToProjectNodeMap.ContainsKey(classNamespace.Name.ToString()))
@@ -133,11 +135,16 @@ namespace CSharpCodeVisualizer.Syntax
             string programText = System.IO.File.ReadAllText(path);
             SyntaxTree tree = CSharpSyntaxTree.ParseText(programText);
             CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
+            var compilation = CSharpCompilation.Create(System.Reflection.Assembly.GetExecutingAssembly().GetName().Name)
+                .AddReferences(MetadataReference.CreateFromFile(
+                    typeof(string).Assembly.Location))
+                .AddSyntaxTrees(tree);
+            var semanticModel = compilation.GetSemanticModel(tree);
             var collector = new ClassCollector();
             collector.Visit(root);
             foreach (ClassDeclarationSyntax classDef in collector.Classes)
             {
-                ClassNode classNode = new ClassNode(classDef);
+                ClassNode classNode = new ClassNode(classDef, semanticModel);
                 InsertClassNode(classNode);
             }
             return classNodes;
