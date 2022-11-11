@@ -7,48 +7,52 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 
-public class ClassNode : ProjectNode
+namespace CSharpCodeVisualizer.Syntax
 {
-    private ClassDeclarationSyntax _classDeclaration;
-    private SemanticModel _semanticModel;
-
-    public override string Key
+    public class ClassNode : ProjectNode
     {
-        get
+        private ClassDeclarationSyntax _classDeclaration;
+        private SemanticModel _semanticModel;
+
+        public override string Key
         {
-            return this._classDeclaration.Identifier.ToString();
+            get
+            {
+                return this._classDeclaration.Identifier.ToString();
+            }
         }
-    }
 
-    public ClassDeclarationSyntax ClassDef
-    {
-        get
+        public ClassDeclarationSyntax ClassDef
         {
-            return _classDeclaration;
+            get
+            {
+                return _classDeclaration;
+            }
         }
-    }
 
-    public SemanticModel SemanticModel
-    {
-        get
+        public SemanticModel SemanticModel
         {
-            return this._semanticModel;
+            get
+            {
+                return this._semanticModel;
+            }
         }
-    }
 
-    public string BaseClass
-    {
-        get
+        public string BaseClass
         {
-            var classSymbol = _semanticModel.GetDeclaredSymbol(_classDeclaration) as ITypeSymbol;  //need to consult semantic model to make sure the base type isn't actually an interface
-            var baseTypeName = classSymbol.BaseType.Name;
-            return baseTypeName;
+            get
+            {
+                var classSymbol = _semanticModel.GetDeclaredSymbol(_classDeclaration) as ITypeSymbol;  //need to consult semantic model to make sure the base type isn't actually an interface
+                var baseTypeName = classSymbol.BaseType.Name;
+                return baseTypeName;
+            }
         }
-    }
 
-    public ClassNode(ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel) : base()
-    {
-        this._classDeclaration = classDeclaration;
-        this._semanticModel = semanticModel;
+        public ClassNode(ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel) : base()
+        {
+            this._classDeclaration = classDeclaration;
+            this._semanticModel = semanticModel;
+        }
     }
 }
+

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using SimpleFileBrowser;
 
 public class VisualizationGenerator : MonoBehaviour
 {
@@ -12,10 +13,12 @@ public class VisualizationGenerator : MonoBehaviour
     public GameObject nodePrefab;
     public Material lineMaterial;
     public GameObject visualizationTransformRoot;
+    private Dictionary<string, GameObject> nodeMap = new Dictionary<string, GameObject>();
 
     public void GenerateVisualizationFromTree(ProjectTree tree)
     {
         tree.Root.Children.ForEach(node => GenerateTreeFromRoot(node));
+        GenerateRelationships(tree);
     }
 
     private void GenerateTreeFromRoot(ProjectNode rootNode)
@@ -29,13 +32,32 @@ public class VisualizationGenerator : MonoBehaviour
         lastTreeRadius = thisTreeRadius;
     }
 
+    private void GenerateRelationships(ProjectTree tree)
+    {
+        Queue<ProjectNode> q = new Queue<ProjectNode>();
+        q.Enqueue(tree.Root);
+        while(q.Count > 0)
+        {
+            ProjectNode node = q.Dequeue();
+            if(node is ClassNode)
+            {
+                GameObject baseClassNodeObject = nodeMap.GetValueOrDefault(((ClassNode)node).BaseClass);
+                if (baseClassNodeObject != null)
+                {
+                    GameObject extendingClassNodeObject = nodeMap.GetValueOrDefault(node.Key);
+                    extendingClassNodeObject.GetComponent<UnityProjectNode>().NewRelationshipLine(baseClassNodeObject);
+                }
+            }
+            node.Children.ForEach(child => q.Enqueue(child));
+        }
+    }
+
     private void GenerateTreeFromNode(Vector3 prevNodeCoordinate, GameObject prevNode, ProjectNode projectNode, Vector3 startCoordinate)
     {
         GameObject namespaceNodeObject = InstantiateAndLabelNode(projectNode.Key, startCoordinate, Quaternion.identity);
         namespaceNodeObject.transform.SetParent(prevNode.transform, true);
         InjectSyntaxNodeIntoUnityNode(namespaceNodeObject, projectNode);
-        UnityProjectNode unityNamespaceNode = namespaceNodeObject.GetComponentInChildren<UnityProjectNode>();
-        unityNamespaceNode.injectSyntaxNode(projectNode);
+        nodeMap.Add(getNodeKey(namespaceNodeObject), namespaceNodeObject);
         Vector3 levelOffset = new Vector3(0, -verticalDistanceBetweenLevels, 0);
         if (prevNodeCoordinate != startCoordinate)
         {
@@ -61,6 +83,7 @@ public class VisualizationGenerator : MonoBehaviour
                 GameObject classNodeObject = InstantiateAndLabelNode(child.Key, nodePosition, Quaternion.identity);
                 classNodeObject.transform.SetParent(namespaceNodeObject.transform, true);
                 InjectSyntaxNodeIntoUnityNode(classNodeObject, child);
+                nodeMap.Add(child.Key, classNodeObject);
                 LineRenderer lineToPrev = classNodeObject.AddComponent<LineRenderer>();
                 ConfigureLineRenderer(lineToPrev);
                 lineToPrev.SetPosition(0, startCoordinate);
@@ -77,10 +100,16 @@ public class VisualizationGenerator : MonoBehaviour
         return nodeObject;
     }
 
+    private string getNodeKey(GameObject node)
+    {
+        UnityProjectNode unityProjectNode = node.GetComponent<UnityProjectNode>();
+        return unityProjectNode.SyntaxNode.Key;
+    }
+
     private void InjectSyntaxNodeIntoUnityNode(GameObject unityNodeObject, ProjectNode projectNode)
     {
-        UnityProjectNode unityProjectNode = unityNodeObject.GetComponentInChildren<UnityProjectNode>();
-        unityProjectNode.injectSyntaxNode(projectNode);
+        UnityProjectNode unityProjectNode = unityNodeObject.GetComponent<UnityProjectNode>();
+        unityProjectNode.InjectSyntaxNode(projectNode);
     }
 
     private void ConfigureLineRenderer(LineRenderer line)
@@ -97,7 +126,11 @@ public class VisualizationGenerator : MonoBehaviour
     {
         visualizationTransformRoot = GameObject.Find("VisualizationTransformRoot");
         ProjectTree tree = new ProjectTree();
-        tree.PopulateTreeFromProjectPath("F:/Dev/CSharpCodeVisualizer");
+        tree.PopulateTreeFromProjectPath("F:/Dev/CSharpCodeVisualizer/Assets/Scripts");
         GenerateVisualizationFromTree(tree);
+        FileBrowser.AskPermissions = false;
+        FileBrowser.ShowLoadDialog( ( paths ) => { Debug.Log( "Selected: " + paths[0] ); },
+        						   () => { Debug.Log( "Canceled" ); },
+        						   FileBrowser.PickMode.Folders, false, null, null, "Select Folder", "Select" );
     }
 }

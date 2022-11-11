@@ -17,9 +17,9 @@ public class OculusInputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (OVRInput.Get(OVRInput.RawButton.RIndexTrigger))
+        if (OVRInput.Get(OVRInput.RawButton.RIndexTrigger))  //all nodes are parented to the visualization transform root - if it moves, all of the nodes move as well
         {
-            Vector3 visualizationTransformRootTranslation = (rightController.transform.position - lastControllerPosition) * 3;
+            Vector3 visualizationTransformRootTranslation = (rightController.transform.position - lastControllerPosition) * 5;
             visualizationTransformRoot.transform.position += visualizationTransformRootTranslation;
         }
         lastControllerPosition = rightController.transform.position;
