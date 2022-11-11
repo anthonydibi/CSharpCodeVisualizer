@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using SimpleFileBrowser;
+using System.Threading.Tasks;
 
 public class VisualizationGenerator : MonoBehaviour
 {
@@ -15,10 +16,11 @@ public class VisualizationGenerator : MonoBehaviour
     public GameObject visualizationTransformRoot;
     private Dictionary<string, GameObject> nodeMap = new Dictionary<string, GameObject>();
 
-    public void GenerateVisualizationFromTree(ProjectTree tree)
+    public IEnumerator GenerateVisualizationFromTree(ProjectTree tree)
     {
         tree.Root.Children.ForEach(node => GenerateTreeFromRoot(node));
         GenerateRelationships(tree);
+        yield return null;
     }
 
     private void GenerateTreeFromRoot(ProjectNode rootNode)
@@ -125,11 +127,15 @@ public class VisualizationGenerator : MonoBehaviour
     void Start()
     {
         visualizationTransformRoot = GameObject.Find("VisualizationTransformRoot");
-        ProjectTree tree = new ProjectTree();
+/*        ProjectTree tree = new ProjectTree();
         tree.PopulateTreeFromProjectPath("F:/Dev/CSharpCodeVisualizer/Assets/Scripts");
-        GenerateVisualizationFromTree(tree);
+        GenerateVisualizationFromTree(tree);*/
         FileBrowser.AskPermissions = false;
-        FileBrowser.ShowLoadDialog( ( paths ) => { Debug.Log( "Selected: " + paths[0] ); },
+        FileBrowser.ShowLoadDialog(onSuccess: ( paths ) => {
+                ProjectTree tree = new ProjectTree();
+                tree.PopulateTreeFromProjectPath(paths[0]);
+                GenerateVisualizationFromTree(tree);
+            },
         						   () => { Debug.Log( "Canceled" ); },
         						   FileBrowser.PickMode.Folders, false, null, null, "Select Folder", "Select" );
     }

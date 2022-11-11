@@ -93,7 +93,7 @@ namespace SimpleFileBrowser
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL || UNITY_WSA || UNITY_WSA_10_0
 			if( eventData.button == PointerEventData.InputButton.Middle )
 				return;
-			else if( eventData.button == PointerEventData.InputButton.Right )
+			/*else if( eventData.button == PointerEventData.InputButton.Right )
 			{
 				// First, select the item
 				if( !isSelected )
@@ -105,7 +105,7 @@ namespace SimpleFileBrowser
 				// Then, show the context menu
 				fileBrowser.OnContextMenuTriggered( eventData.position );
 				return;
-			}
+			}*/
 #endif
 
 			if( Time.realtimeSinceStartup - prevClickTime < DOUBLE_CLICK_TIME )

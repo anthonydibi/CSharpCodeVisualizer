@@ -8,12 +8,22 @@ public class VRInput : BaseInput
     public Camera eventCamera = null;
 
     public OVRInput.Button clickButton = OVRInput.Button.PrimaryIndexTrigger;
+    public OVRInput.Button gripButton = OVRInput.Button.PrimaryHandTrigger;
     public OVRInput.Controller controller = OVRInput.Controller.All;
 
     protected override void Awake()
     {
         GetComponent<BaseInputModule>().inputOverride = this;
     }
+
+    public override bool GetButtonDown(string buttonName)
+    {
+        return OVRInput.GetDown(gripButton, controller);
+    }
+
+    /// <summary>
+    /// Interface to Input.GetMouseButton. Can be overridden to provide custom input instead of using the Input class.
+    /// </summary>
 
     public override bool GetMouseButton(int button)
     {
