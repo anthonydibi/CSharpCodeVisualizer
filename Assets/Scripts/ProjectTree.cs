@@ -112,7 +112,7 @@ namespace CSharpCodeVisualizer.Syntax
         private void InsertClassNode(ClassNode classNode)
         {
             NamespaceDeclarationSyntax classNamespace =
-                classNode.ClassDef.Ancestors().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
+                classNode.TypeDeclaration.Ancestors().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
             if (classNamespace == null)  //if the class doesn't have a namespace, place it in the root namespace
             {
                 if(_keyToProjectNodeMap.TryAdd(classNode.Key, classNode))

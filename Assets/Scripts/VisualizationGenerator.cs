@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using SimpleFileBrowser;
-using System.Threading.Tasks;
 
 public class VisualizationGenerator : MonoBehaviour
 {
@@ -16,11 +15,10 @@ public class VisualizationGenerator : MonoBehaviour
     public GameObject visualizationTransformRoot;
     private Dictionary<string, GameObject> nodeMap = new Dictionary<string, GameObject>();
 
-    public IEnumerator GenerateVisualizationFromTree(ProjectTree tree)
+    public void GenerateVisualizationFromTree(ProjectTree tree)
     {
         tree.Root.Children.ForEach(node => GenerateTreeFromRoot(node));
         GenerateRelationships(tree);
-        yield return null;
     }
 
     private void GenerateTreeFromRoot(ProjectNode rootNode)
@@ -77,11 +75,12 @@ public class VisualizationGenerator : MonoBehaviour
             Vector3 nodePosition = (startCoordinate + levelOffset) + (directionToNode * ProjectConstants.DISTANCE_FROM_CENTRAL_NODE);
             if (child is NamespaceNode)
             {
-                verticalDistanceBetweenLevels += .07f;
+                verticalDistanceBetweenLevels += .17f;
                 GenerateTreeFromNode(startCoordinate, namespaceNodeObject, child, nodePosition);
             }
             else if (child is ClassNode)
             {
+                ProjectConstants.maxClassMembers = Mathf.Max(((ClassNode)child).TypeDeclaration.Members.Count, ProjectConstants.maxClassMembers);
                 GameObject classNodeObject = InstantiateAndLabelNode(child.Key, nodePosition, Quaternion.identity);
                 classNodeObject.transform.SetParent(namespaceNodeObject.transform, true);
                 InjectSyntaxNodeIntoUnityNode(classNodeObject, child);
@@ -136,7 +135,7 @@ public class VisualizationGenerator : MonoBehaviour
                 tree.PopulateTreeFromProjectPath(paths[0]);
                 GenerateVisualizationFromTree(tree);
             },
-        						   () => { Debug.Log( "Canceled" ); },
-        						   FileBrowser.PickMode.Folders, false, null, null, "Select Folder", "Select" );
+        			            () => { Debug.Log( "Canceled" ); },
+        			            FileBrowser.PickMode.Folders, false, null, null, "Select Folder", "Select" );
     }
 }

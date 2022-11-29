@@ -11,22 +11,22 @@ namespace CSharpCodeVisualizer.Syntax
 {
     public class ClassNode : ProjectNode
     {
-        private ClassDeclarationSyntax _classDeclaration;
+        private ClassDeclarationSyntax _typeDeclaration;
         private SemanticModel _semanticModel;
 
         public override string Key
         {
             get
             {
-                return this._classDeclaration.Identifier.ToString();
+                return this._typeDeclaration.Identifier.ToString();
             }
         }
 
-        public ClassDeclarationSyntax ClassDef
+        public override TypeDeclarationSyntax TypeDeclaration
         {
             get
             {
-                return _classDeclaration;
+                return _typeDeclaration;
             }
         }
 
@@ -42,7 +42,7 @@ namespace CSharpCodeVisualizer.Syntax
         {
             get
             {
-                var classSymbol = _semanticModel.GetDeclaredSymbol(_classDeclaration) as ITypeSymbol;  //need to consult semantic model to make sure the base type isn't actually an interface
+                var classSymbol = _semanticModel.GetDeclaredSymbol(_typeDeclaration) as ITypeSymbol;  //need to consult semantic model to make sure the base type isn't actually an interface
                 var baseTypeName = classSymbol.BaseType.Name;
                 return baseTypeName;
             }
@@ -50,7 +50,7 @@ namespace CSharpCodeVisualizer.Syntax
 
         public ClassNode(ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel) : base()
         {
-            this._classDeclaration = classDeclaration;
+            this._typeDeclaration = classDeclaration;
             this._semanticModel = semanticModel;
         }
     }

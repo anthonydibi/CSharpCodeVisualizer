@@ -18,6 +18,13 @@ public class UnityProjectNode : MonoBehaviour
         }
     }
     // Start is called before the first frame update
+    private void Start()
+    {
+        if (this._syntaxNode is ClassNode)
+        {
+            this.transform.localScale *= 1 + (((ClassNode)this._syntaxNode).TypeDeclaration.Members.Count / (float)ProjectConstants.maxClassMembers);  //scale node depending on how many members it has (smaller nodes have less members)
+        }
+    }
 
     // Update is called once per frame
     void Update()

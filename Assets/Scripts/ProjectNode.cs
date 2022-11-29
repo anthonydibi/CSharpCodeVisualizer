@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CSharpCodeVisualizer.Syntax
 {
@@ -8,7 +9,7 @@ namespace CSharpCodeVisualizer.Syntax
     {
 
         protected List<ProjectNode> _children;
-        protected GameObject _gameObject;
+        private TypeDeclarationSyntax _typeDeclaration;
 
         public virtual string Key
         {
@@ -18,19 +19,19 @@ namespace CSharpCodeVisualizer.Syntax
             }
         }
 
+        public virtual TypeDeclarationSyntax TypeDeclaration
+        {
+            get
+            {
+                return _typeDeclaration;
+            }
+        }
+
         public int Height
         {
             get
             {
                 return CalculateHeight(this);
-            }
-        }
-
-        public GameObject GameObject
-        {
-            get
-            {
-                return this._gameObject;
             }
         }
 
