@@ -2,26 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OculusInputController : MonoBehaviour
+namespace ThreeSharp.Interaction
 {
-    private Vector3 lastControllerPosition;
-    public GameObject rightController;
-    public GameObject visualizationTransformRoot;
-    // Start is called before the first frame update
-    void Start()
+    public class OculusInputController : MonoBehaviour
     {
-        rightController = GameObject.Find("RightHandAnchor");
-        visualizationTransformRoot = GameObject.Find("VisualizationTransformRoot");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (OVRInput.Get(OVRInput.RawButton.RIndexTrigger))  //all nodes are parented to the visualization transform root - if it moves, all of the nodes move as well
+        private Vector3 lastControllerPosition;
+        public GameObject rightController;
+        public GameObject visualizationTransformRoot;
+        // Start is called before the first frame update
+        void Start()
         {
-            Vector3 visualizationTransformRootTranslation = (rightController.transform.position - lastControllerPosition) * 5;
-            visualizationTransformRoot.transform.position += visualizationTransformRootTranslation;
+            rightController = GameObject.Find("RightHandAnchor");
+            visualizationTransformRoot = GameObject.Find("VisualizationTransformRoot");
         }
-        lastControllerPosition = rightController.transform.position;
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (OVRInput.Get(OVRInput.RawButton.RIndexTrigger))  //all nodes are parented to the visualization transform root - if it moves, all of the nodes move as well
+            {
+                Vector3 visualizationTransformRootTranslation = (rightController.transform.position - lastControllerPosition) * 5;
+                visualizationTransformRoot.transform.position += visualizationTransformRootTranslation;
+            }
+            lastControllerPosition = rightController.transform.position;
+        }
     }
 }
+

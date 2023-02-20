@@ -7,9 +7,9 @@ using Microsoft.CodeAnalysis;
 using System.IO;
 using System;
 using System.Linq;
-using CSharpCodeVisualizer.Syntax.Walkers;
+using ThreeSharp.Parsing.Walkers;
 
-namespace CSharpCodeVisualizer.Syntax
+namespace ThreeSharp.Parsing
 {
     public class ProjectTree
     {

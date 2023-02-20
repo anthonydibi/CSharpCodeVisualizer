@@ -3,47 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class VRInput : BaseInput
+namespace ThreeSharp.Interaction
 {
-    public Camera eventCamera = null;
-
-    public OVRInput.Button clickButton = OVRInput.Button.PrimaryIndexTrigger;
-    public OVRInput.Button gripButton = OVRInput.Button.PrimaryHandTrigger;
-    public OVRInput.Controller controller = OVRInput.Controller.All;
-
-    protected override void Awake()
+    public class VRInput : BaseInput
     {
-        GetComponent<BaseInputModule>().inputOverride = this;
-    }
+        public Camera eventCamera = null;
 
-    public override bool GetButtonDown(string buttonName)
-    {
-        return OVRInput.GetDown(gripButton, controller);
-    }
+        public OVRInput.Button clickButton = OVRInput.Button.PrimaryIndexTrigger;
+        public OVRInput.Button gripButton = OVRInput.Button.PrimaryHandTrigger;
+        public OVRInput.Controller controller = OVRInput.Controller.All;
 
-    /// <summary>
-    /// Interface to Input.GetMouseButton. Can be overridden to provide custom input instead of using the Input class.
-    /// </summary>
-
-    public override bool GetMouseButton(int button)
-    {
-        return OVRInput.Get(clickButton, controller);
-    }
-
-    public override bool GetMouseButtonDown(int button)
-    {
-        return OVRInput.GetDown(clickButton, controller);
-    }
-
-    public override bool GetMouseButtonUp(int button)
-    {
-        return OVRInput.GetUp(clickButton, controller);
-    }
-    public override Vector2 mousePosition
-    {
-        get
+        protected override void Awake()
         {
-            return new Vector2(eventCamera.pixelWidth / 2, eventCamera.pixelHeight / 2);
+            GetComponent<BaseInputModule>().inputOverride = this;
+        }
+
+        public override bool GetButtonDown(string buttonName)
+        {
+            return OVRInput.GetDown(gripButton, controller);
+        }
+
+        /// <summary>
+        /// Interface to Input.GetMouseButton. Can be overridden to provide custom input instead of using the Input class.
+        /// </summary>
+
+        public override bool GetMouseButton(int button)
+        {
+            return OVRInput.Get(clickButton, controller);
+        }
+
+        public override bool GetMouseButtonDown(int button)
+        {
+            return OVRInput.GetDown(clickButton, controller);
+        }
+
+        public override bool GetMouseButtonUp(int button)
+        {
+            return OVRInput.GetUp(clickButton, controller);
+        }
+        public override Vector2 mousePosition
+        {
+            get
+            {
+                return new Vector2(eventCamera.pixelWidth / 2, eventCamera.pixelHeight / 2);
+            }
         }
     }
 }

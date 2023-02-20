@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace CSharpCodeVisualizer.Syntax
+namespace ThreeSharp.Parsing
 {
     public class ProjectNode
     {

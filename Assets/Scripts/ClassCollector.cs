@@ -4,7 +4,7 @@ using UnityEngine;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace CSharpCodeVisualizer.Syntax.Walkers
+namespace ThreeSharp.Parsing.Walkers
 {
     class ClassCollector : CSharpSyntaxWalker
     {

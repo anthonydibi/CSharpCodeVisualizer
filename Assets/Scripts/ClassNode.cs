@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CSharpCodeVisualizer.Syntax;
+using ThreeSharp.Parsing;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace CSharpCodeVisualizer.Syntax
+namespace ThreeSharp.Parsing
 {
     public class ClassNode : ProjectNode
     {

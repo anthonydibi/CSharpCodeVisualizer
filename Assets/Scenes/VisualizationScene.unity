@@ -1902,9 +1902,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9dcbaff8bb595f418eda8eee149c82a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodePrefab: {fileID: 6632272298646390245, guid: 053441c9dfbdcac4e9590fb2b64ff43f, type: 3}
+  classNodePrefab: {fileID: 6632272298646390245, guid: 053441c9dfbdcac4e9590fb2b64ff43f, type: 3}
+  namespaceNodePrefab: {fileID: 6632272298646390245, guid: 96504b8bdf7ddb043b49f5670f8a0250, type: 3}
   lineMaterial: {fileID: 2100000, guid: 2a2ce6ffa7ddac445bf52e97e2452871, type: 2}
-  visualizationTransformRoot: {fileID: 0}
 --- !u!4 &1368971331
 Transform:
   m_ObjectHideFlags: 0
